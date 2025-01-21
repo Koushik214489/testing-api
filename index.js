@@ -34,12 +34,12 @@
 
 const express = require('express');
 const { resolve } = require('path');
-
+const bodyParser = require('body-parser');
 const app = express();
 const port = 3010;
 
-app.use(bodyParse.json());
-const student = require('./data.json');
+app.use(bodyParser.json());
+const students = require('./data.json');
 app.post('/students/above-threshold',(req,res)=>{
   const {threshold} = req.body;
 
@@ -49,16 +49,20 @@ app.post('/students/above-threshold',(req,res)=>{
   }
   const filteredStudent = students.filter(student=> student.total > threshold);
   const response = {
-    count:filteredStudents.length,
-    student:filteredStudents.map(({name,total}) => ([name,total])), 
+    count:filteredStudent.length,
+    student:filteredStudent.map(({name,total}) => ([name,total])), 
   }
+
+  return res.status(200).json(response);
 })
 
-app.use(express.static('static'));
+// app.use(express.static('static'));
 
-app.get('/', (req, res) => {
-  res.sendFile(resolve(__dirname, 'pages/index.html'));
-});
+// app.get('/', (req, res) => {
+//   res.sendFile(resolve(__dirname, 'pages/index.html'));
+// });
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
